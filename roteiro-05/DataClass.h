@@ -2,81 +2,81 @@
 #include <stdexcept>
 using namespace std;
 
-#define MIN_DIA 1
-#define MAX_DIA 30
-#define MIN_MES 1
-#define MAX_MES 12
-#define MIN_ANO 1
-#define MAX_ANO 2017
+#define MIN_DAY 1
+#define MAX_DAY 30
+#define MIN_month 1
+#define MAX_MONTH 12
+#define MIN_year 1
+#define MAX_YEAR 2017
 
 class DataClass {
 
 private:
-  int dia, mes, ano;
+  int day, month, year;
 
 public:
-  DataClass(int dia, int mes, int ano);
+  DataClass(int day, int month, int year);
 
-  void setDia(int dia);
-  void setMes(int mes);
-  void setAno(int ano);
-  void avancarDia(void);
+  void setDay(int day);
+  void setMonth(int month);
+  void setYear(int year);
+  void nextDay(void);
 
-  int getDia(void);
-  int getMes(void);
-  int getAno(void);
+  int getDay(void);
+  int getMonth(void);
+  int getYear(void);
 
 };
 
-DataClass::DataClass(int dia, int mes, int ano) {
-  if(dia < MIN_DIA || dia > MAX_DIA){
-    throw invalid_argument("Dia invalido!");
+DataClass::DataClass(int day, int month, int year) {
+  if(day < MIN_DAY || day > MAX_DAY){
+    throw invalid_argument("day invalido!");
   }
-  if(mes < MIN_MES || mes > MAX_MES){
+  if(month < MIN_month || month > MAX_MONTH){
     throw invalid_argument("Mês invalido!");
   }
-  if(ano < MIN_ANO || ano > MAX_ANO){
-    throw invalid_argument("Ano invalido!");
+  if(year < MIN_year || year > MAX_YEAR){
+    throw invalid_argument("year invalido!");
   }
 
-  DataClass::dia = dia;
-  DataClass::mes = mes;
-  DataClass::ano = ano;
+  DataClass::day = day;
+  DataClass::month = month;
+  DataClass::year = year;
 
   cout << '\n' << "Object is being created." << '\n';
 }
 /*Methods Set and Void*/
-void DataClass::setDia(int novoDia){
-  DataClass::dia = novoDia;
+void DataClass::setDay(int newDay){
+  DataClass::day = newDay;
 }
-void DataClass::setMes(int novoMes){
-  DataClass::mes = novoMes;
+void DataClass::setMonth(int newMonth){
+  DataClass::month = newMonth;
 }
-void DataClass::setAno(int novoAno){
-  DataClass::ano = novoAno;
+void DataClass::setYear(int newYear){
+  DataClass::year = newYear;
 }
-void DataClass::avancarDia(void){
-  if(dia < MAX_DIA){
-    dia++;
+void DataClass::nextDay(void){
+  if(day < MAX_DAY){
+    day++;
   }
   else{
-    DataClass::dia = 1;
-    if(DataClass::mes < MAX_MES){
-      DataClass::mes++;
+    DataClass::day = 1;
+    if(DataClass::month < MAX_MONTH){
+      DataClass::month++;
     }
     else{
-      DataClass::mes = 1;
-      DataClass::ano++;
+      DataClass::month = 1;
+      DataClass::year++;
     }
   }
 }
 /*Methods Get*/
-int DataClass::getDia(void){
-  return DataClass::dia;
+int DataClass::getDay(void){
+  return DataClass::day;
 }
-int DataClass::getMes(void){
-  return DataClass::mes;
+int DataClass::getMonth(void){
+  return DataClass::month;
 }
-int DataClass::getAno(void){
-  return DataClass::ano;
+int DataClass::getYear(void){
+  return DataClass::year;
 }
