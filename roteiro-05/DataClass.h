@@ -1,10 +1,18 @@
 #include <iostream>
+#include <stdexcept>
 using namespace std;
 
-#define MAX_DIA 30
 #define MIN_DIA 1
+#define MAX_DIA 30
+#define MIN_MES 1
+#define MAX_MES 12
+#define MIN_ANO 1
+#define MAX_ANO 2017
 
 class DataClass {
+
+private:
+  int dia, mes, ano;
 
 public:
   DataClass(int dia, int mes, int ano);
@@ -18,15 +26,24 @@ public:
   int getMes(void);
   int getAno(void);
 
-private:
-  int dia, mes, ano;
 };
 
-DataClass::DataClass(int dia, int mes, int ano){
-  cout << "Object is being created." << '\n';
+DataClass::DataClass(int dia, int mes, int ano) {
+  if(dia < MIN_DIA || dia > MAX_DIA){
+    throw invalid_argument("Dia invalido!");
+  }
+  if(mes < MIN_MES || mes > MAX_MES){
+    throw invalid_argument("Mês invalido!");
+  }
+  if(ano < MIN_ANO || ano > MAX_ANO){
+    throw invalid_argument("Ano invalido!");
+  }
+
   DataClass::dia = dia;
   DataClass::mes = mes;
   DataClass::ano = ano;
+
+  cout << "Object is being created." << '\n';
 }
 /*Methods Set and Void*/
 void DataClass::setDia(int novoDia){
@@ -43,7 +60,14 @@ void DataClass::avancarDia(void){
     dia++;
   }
   else{
-    dia = 1;
+    DataClass::dia = 1;
+    if(DataClass::mes < MAX_MES){
+      DataClass::mes++;
+    }
+    else{
+      DataClass::mes = 1;
+      DataClass::ano++;
+    }
   }
 }
 /*Methods Get*/
