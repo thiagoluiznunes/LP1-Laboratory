@@ -43,7 +43,7 @@ DataClass::DataClass(int dia, int mes, int ano) {
   DataClass::mes = mes;
   DataClass::ano = ano;
 
-  cout << "Object is being created." << '\n';
+  cout << '\n' << "Object is being created." << '\n';
 }
 /*Methods Set and Void*/
 void DataClass::setDia(int novoDia){
