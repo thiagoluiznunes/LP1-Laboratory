@@ -1,0 +1,6 @@
+class RestaurantHome {
+private:
+
+public:
+
+};

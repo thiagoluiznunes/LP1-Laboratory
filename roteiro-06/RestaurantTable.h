@@ -1,0 +1,6 @@
+class RestaurantTable {
+private:
+
+public:
+
+};
