@@ -1,3 +1,6 @@
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
+
 #include "GeometricFigure.h"
 
 class Triangle : public GeometricFigure{
@@ -8,6 +11,7 @@ private:
 public:
   Triangle(double h, double b, string name);
 
+  double caculatedArea(void);
   double getHeight(void);
   double getBase(void);
   void setHeight(double h);
@@ -18,7 +22,9 @@ Triangle::Triangle(double h, double b, string name) : GeometricFigure(name){
   height = h;
   base = b;
 }
-
+double Triangle::caculatedArea(void){
+  return (height*base)/2;
+}
 double Triangle::getHeight(void){
   return height;
 }
@@ -31,3 +37,5 @@ double Triangle::getBase(void){
 void Triangle::setBase(double b){
   base = b;
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef GEOMETRICFIGURE_H
+#define GEOMETRICFIGURE_H
+
 #include <iostream>
 #include <stdexcept>
 using namespace std;
@@ -18,10 +21,11 @@ public:
 GeometricFigure::GeometricFigure(string n){
   name = n;
 }
-
 string GeometricFigure::getName(void){
   return name;
 }
 void GeometricFigure::setName(string n){
   name = n;
 }
+
+#endif
