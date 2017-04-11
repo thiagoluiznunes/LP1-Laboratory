@@ -3,18 +3,19 @@
 
 #include <string>
 using namespace std;
+
 class Employee {
-private:
+protected:
   string registration;
   string name;
   float salary;
 public:
   Employee(string r, string n, float s);
 
-  string getResgist(void);
+  string getRegist(void);
   string getName(void);
-  float getSalary(void);
-  void setResgist(string r);
+  virtual float getSalary(void);
+  void setRegist(string r);
   void setName(string n);
   void setSalary(float s);
 };
@@ -25,7 +26,7 @@ Employee::Employee(string r, string n, float s){
   salary = s;
 }
 
-string Employee::getResgist(void){
+string Employee::getRegist(void){
   return registration;
 }
 string Employee::getName(void){
@@ -35,7 +36,7 @@ float Employee::getSalary(void){
   return salary;
 }
 
-void Employee::setResgist(string r){
+void Employee::setRegist(string r){
   registration = r;
 }
 void Employee::setName(string n){

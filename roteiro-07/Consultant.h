@@ -1,16 +1,18 @@
 #ifndef CONSULTANT_H
 #define CONSULTANT_H
 
+#include <iostream>
+#include <string>
 #include "Employee.h"
 using namespace std;
 
 class Consultant : public Employee{
 private:
 public:
-  Consultant(string r, string n, string s);
+  Consultant(string r, string n, float s);
 
-  float getSalary(void);
-  float getSalary(float percentage);
+  float getSalary(void)  override;
+  float getSalary(float percentage) ;
 };
 
 Consultant::Consultant(string r, string n, float s) : Employee(r,n,s){}
