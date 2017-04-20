@@ -7,7 +7,7 @@ using namespace std;
 
 class Imovel {
 protected:
-  Endereco endereco;
+  Endereco *endereco;
 public:
   Imovel(Endereco end);
 
@@ -15,7 +15,7 @@ public:
   virtual string getDescricao(void) = 0;
 };
 
-Imovel::Imovel(Endereco end){
+Imovel::Imovel(const Endereco end){
   endereco = end;
 }
 Endereco Imovel::getEndereco(void){
