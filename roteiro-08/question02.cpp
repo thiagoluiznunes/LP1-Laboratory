@@ -1,15 +1,15 @@
 #include <iostream>
-#include "Imovel.h"
-#include "Casa.h"
-#include "Terreno.h"
-#include "Apartamento.h"
+#include <vector>
 #include "Endereco.h"
+#include "Imovel.h"
+#include "Apartamento.h"
 using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  //Endereco(string log, string bairro, int num, string cidade, string cep);
-  Endereco *first = new Endereco("Rua Paulo Roberto", "Bessa", 447, "JP", "58035110");
-  //Imovel *imovel = new Imovel(first);
+
+  Endereco teste2 = Endereco("Rua A", "Mangabeira", 101, "João Pessoa", "58000-000");
+  Apartamento ap =  Apartamento("Sul", 200, 2, teste2);
+
   return 0;
 }

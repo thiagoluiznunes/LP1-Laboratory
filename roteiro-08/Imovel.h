@@ -7,18 +7,18 @@ using namespace std;
 
 class Imovel {
 protected:
-  Endereco *endereco;
+  Endereco endereco;
 public:
-  Imovel(Endereco end);
+  Imovel(const Endereco &end);
 
-  Endereco getEndereco(void);
-  virtual string getDescricao(void) = 0;
+  const Endereco &getEndereco() const;
+  virtual const string &getDescricao() const = 0;
 };
 
-Imovel::Imovel(const Endereco end){
-  endereco = end;
-}
-Endereco Imovel::getEndereco(void){
+Imovel::Imovel(const Endereco &end) : endereco(end){}
+
+const Endereco &Imovel::getEndereco() const {
   return endereco;
 }
+
 #endif

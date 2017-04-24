@@ -2,7 +2,10 @@
 #define APARTAMENTO_H
 
 #include <string>
+#include <iomanip>
+#include <sstream>
 #include "Imovel.h"
+#include "Apartamento.h"
 using namespace std;
 
 class Apartamento : public Imovel {
@@ -11,16 +14,24 @@ private:
   double valorCondominio;
   int numVagas;
 public:
-  Apartamento(string pos, double value, int vagas, Endereco end);
-  string getDescricao(void);
+  Apartamento(const string pos, double value, int vagas, const Endereco &end);
+  const string &getDescricao() const override;
 };
 
-Apartamento::Apartamento(string pos, double value, int vagas, Endereco end) : Imovel(end){
+Apartamento::Apartamento(const string pos, double value, int vagas, const Endereco &end) : Imovel(end){
   posicao = pos;
   valorCondominio = value;
   numVagas = vagas;
 }
-string Apartamento::getDescricao(void){
-  return "Apartamento!";
+const string &Apartamento::getDescricao() const {
+   stringstream stream;
+   stream << fixed << setprecision(2) << valorCondominio;
+
+   static string s = "oi";
+      s = "Descrição do apartamento\n" + Apartamento::end.getEnderecoString();
+      s += "\nPosição: " + posicao + "; Valor do condominio: " + stream.str()
+        + "; Vagas: " + to_string(numVagas);
+
+  return s;
 }
 #endif
