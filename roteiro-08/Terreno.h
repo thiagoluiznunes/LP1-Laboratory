@@ -9,14 +9,21 @@ class Terreno : public Imovel {
 private:
   double area;
 public:
-  Terreno(double area, Endereco end);
-  string getDescricao(void);
+  Terreno(double area, const Endereco &end);
+  const string &getDescricao() const override;
 };
 
-Terreno::Terreno(double a, Endereco end) : Imovel(end){
+Terreno::Terreno(double a, const Endereco &end) : Imovel(end){
   area = a;
 }
-string Terreno::getDescricao(void){
-  return "Terreno!";
+const string &Terreno::getDescricao() const {
+    stringstream areaStream;
+    areaStream << fixed << setprecision(2) << area;
+
+    static string s = "";
+    s = "Descrição do terreno\n" + endereco.getEnderecoString();
+    s += "\nArea: " + areaStream.str();
+    
+    return s;
 }
 #endif

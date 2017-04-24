@@ -10,6 +10,7 @@ protected:
   Endereco endereco;
 public:
   Imovel(const Endereco &end);
+  virtual ~Imovel();
 
   const Endereco &getEndereco() const;
   virtual const string &getDescricao() const = 0;
@@ -17,8 +18,11 @@ public:
 
 Imovel::Imovel(const Endereco &end) : endereco(end){}
 
+Imovel::~Imovel(){}
+
 const Endereco &Imovel::getEndereco() const {
   return endereco;
 }
+
 
 #endif

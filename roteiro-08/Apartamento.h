@@ -27,8 +27,8 @@ const string &Apartamento::getDescricao() const {
    stringstream stream;
    stream << fixed << setprecision(2) << valorCondominio;
 
-   static string s = "oi";
-      s = "Descrição do apartamento\n" + Apartamento::end.getEnderecoString();
+   static string s = "";
+      s = "Descrição do apartamento\n" + endereco.getEnderecoString();
       s += "\nPosição: " + posicao + "; Valor do condominio: " + stream.str()
         + "; Vagas: " + to_string(numVagas);
 
