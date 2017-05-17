@@ -13,6 +13,13 @@ extern "C" {
 class Process {
 private:
     AVFormatContext* formatContext;
+    AVCodecContext  *videocodecCtx;
+    AVFrame *frame = nullptr;
+    AVPacket pkt;
+
+    static int video_stream_idx = -1;
+    int frameFinished = 1;
+
 public:
     Process(const std::string& input);
     ~Process();
