@@ -9,15 +9,17 @@ extern "C" {
     #include <libavformat/avio.h>
     #include <libavcodec/avcodec.h>
     #include <libavutil/audio_fifo.h>
+    #include <libavutil/avutil.h>
 }
 class Process {
 private:
     AVFormatContext* formatContext;
-    AVCodecContext  *videocodecCtx;
+    AVCodecContext  *videodecodeCtx = nullptr, *audiodecodeCtx = nullptr;
+    AVStream *video_stream = nullptr, *audio_stream = nullptr;
     AVFrame *frame = nullptr;
     AVPacket pkt;
 
-    static int video_stream_idx = -1;
+    int video_stream_idx = -1;
     int frameFinished = 1;
 
 public:
