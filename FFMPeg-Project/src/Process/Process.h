@@ -11,20 +11,25 @@ extern "C" {
     #include <libavutil/audio_fifo.h>
     #include <libavutil/avutil.h>
 }
+
 class Process {
 private:
     AVFormatContext* formatContext;
-    AVCodecContext  *videodecodeCtx = nullptr, *audiodecodeCtx = nullptr;
-    AVStream *video_stream = nullptr, *audio_stream = nullptr;
-    AVFrame *frame = nullptr;
+    AVCodecContext* videodecodeCtx;
+    AVCodecContext* audiodecodeCtx;
+    AVStream* video_stream;
+    AVStream* audio_stream;
+    AVFrame *frame;
     AVPacket pkt;
 
     int video_stream_idx = -1;
     int frameFinished = 1;
 
 public:
-    Process(const std::string& input);
+    Process();
     ~Process();
+
+    void openFile(const std::string& input);
 
     Process(const Process&)            = delete; // We don't need the copy constructor as this is a singleton.
     Process& operator=(const Process&) = delete; // Copy assignment is not needed also.
