@@ -26,6 +26,7 @@ private:
 
     int video_stream_idx = -1;
     int frameFinished = 1;
+    int refcount = 0;
 
 public:
     Process();

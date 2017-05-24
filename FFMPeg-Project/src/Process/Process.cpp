@@ -1,5 +1,5 @@
 #include "Process.h"
-
+#include "OpenCodec.h"
 //https://ffmpeg.org/ffmpeg.html
 //https://ffmpeg.org/doxygen/3.1/demuxing_decoding_8c-example.html#a30
 
@@ -23,6 +23,7 @@ void Process::openFile(const std::string& input) throw(ProcessError) {
     if(avformat_find_stream_info(formatContext, nullptr) < 0){
         throw ProcessError("Could not find stream information");
     }
+
 
     //Paste stream information on the screen
     av_dump_format(formatContext, 0, input.c_str(), 0);
