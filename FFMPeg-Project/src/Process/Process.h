@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "ProcessError.h"
+#include "MediaHandler.h"
 
 extern "C" {
     #include <libavformat/avformat.h>
@@ -16,7 +17,9 @@ extern "C" {
 
 class Process {
 private:
-    AVFormatContext* formatContext;
+    MediaHandler mediaVideo;
+    MediaHandler mediaAudio;
+    //AVFormatContext* formatContext;
     AVCodecContext* videodecodeCtx;
     AVCodecContext* audiodecodeCtx;
     AVStream* video_stream;
@@ -26,13 +29,14 @@ private:
 
     int video_stream_idx = -1;
     int frameFinished = 1;
-    int refcount = 0;
+
 
 public:
+    int refcount = 0;
     Process();
     ~Process();
 
-    void openFile(const std::string& input) throw(ProcessError);
+    //void openFile(const std::string& input) throw(ProcessError);
 
     Process(const Process&)            = delete; // We don't need the copy constructor as this is a singleton.
     Process& operator=(const Process&) = delete; // Copy assignment is not needed also.

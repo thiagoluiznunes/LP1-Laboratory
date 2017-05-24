@@ -17,7 +17,6 @@ static int open_codec_context(int *stream_idx, AVCodecContext **videodecodeCtx, 
 
     if (ret < 0) {
       throw ProcessError("Could not find " + descMediaType + " stream");
-      return ret;
     }
     else {
         stream_index = ret;
@@ -27,27 +26,24 @@ static int open_codec_context(int *stream_idx, AVCodecContext **videodecodeCtx, 
         dec = avcodec_find_decoder(st->codecpar->codec_id);
         if (!dec) {
           throw ProcessError("Failed to find " + descMediaType + " codec");
-          return AVERROR(EINVAL);
         }
 
         /* Allocate a codec context for the decoder */
         *videodecodeCtx = avcodec_alloc_context3(dec);
         if (!*videodecodeCtx) {
           throw ProcessError("Failed to allocate " + descMediaType + " codec context");
-          return AVERROR(ENOMEM);
+
         }
 
         /* Copy codec parameters from input stream to output codec context */
         if ((ret = avcodec_parameters_to_context(*videodecodeCtx, st->codecpar)) < 0) {
           throw ProcessError("Failed to copy " + descMediaType + " codec parameters to decoder context");
-          return ret;
         }
 
         /* Init the decoders, with or without reference counting */
         av_dict_set(&opts, "refcounted_frames", refcount ? "1" : "0", 0);
         if ((ret = avcodec_open2(*videodecodeCtx, dec, &opts)) < 0) {
           throw ProcessError("Failed to open " + descMediaType + " codec");
-          return ret;
         }
         *stream_idx = stream_index;
     }
