@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#include "ProcessError.h"
+
 extern "C" {
     #include <libavformat/avformat.h>
     #include <libavformat/avio.h>
@@ -29,7 +31,7 @@ public:
     Process();
     ~Process();
 
-    void openFile(const std::string& input);
+    void openFile(const std::string& input) throw(ProcessError);
 
     Process(const Process&)            = delete; // We don't need the copy constructor as this is a singleton.
     Process& operator=(const Process&) = delete; // Copy assignment is not needed also.

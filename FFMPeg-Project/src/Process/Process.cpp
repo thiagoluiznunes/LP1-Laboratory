@@ -11,16 +11,17 @@ Process::Process() : formatContext(nullptr) {
 Process::~Process() {
 }
 
-void Process::openFile(const std::string& input) {
+void Process::openFile(const std::string& input) throw(ProcessError) {
     /* open input file, and allocate format context */
+
     std::cout << "Opening: " << input << std::endl;
     if (avformat_open_input(&formatContext, input.c_str(), nullptr, nullptr) < 0) {
-        std::cerr << "Could not open source file" << std::endl;
+        throw ProcessError("Could not open source file");
     }
 
     // retrieve stream information
     if(avformat_find_stream_info(formatContext, nullptr) < 0){
-      std::cerr << "Could not find stream information" << std::endl;
+        throw ProcessError("Could not find stream information");
     }
 
     //Paste stream information on the screen
