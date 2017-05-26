@@ -17,8 +17,6 @@ extern "C" {
 
 class Process {
 private:
-    // MediaHandler mediaVideo;
-    // MediaHandler mediaAudio;
     AVFormatContext* formatContext;
     AVCodecContext* videodecodeCtx;
     AVCodecContext* audiodecodeCtx;
@@ -30,19 +28,20 @@ private:
     int video_stream_idx = -1;
     int frameFinished = 1;
     int ret = 0, got_frame;
-    int width, height;
-    enum AVPixelFormat pix_fmt;
+    int refcount = 0;
 
     uint8_t *video_dst_data[4] = {NULL};
     int      video_dst_linesize[4];
+    int width, height;
+    enum AVPixelFormat pix_fmt;
     int video_dst_bufsize;
 
-    std::string videoFileName = nullptr;
+    // std::string videoFileName = nullptr;
+    // std::string audioFileName = nullptr;
     FILE *video_dst_file = NULL;
 
 public:
-    int refcount = 0;
-    Process(const std::string& videoFileName);
+    Process();
     ~Process();
 
     void openFile(const std::string& input) throw(ProcessError);

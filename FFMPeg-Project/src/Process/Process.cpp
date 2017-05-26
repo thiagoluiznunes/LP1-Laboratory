@@ -2,8 +2,7 @@
 //https://ffmpeg.org/ffmpeg.html
 //https://ffmpeg.org/doxygen/3.1/demuxing_decoding_8c-example.html#a30
 
-Process::Process(const std::string& videoFileName) : formatContext(nullptr) {
-    videoFileName = videoFileName;
+Process::Process() : formatContext(nullptr) {
     av_register_all(); //Register muxers/demuxers
     av_log_set_level(AV_LOG_INFO); //Set log level (What FFMPEG prints on screen)
 }
@@ -24,15 +23,15 @@ void Process::openFile(const std::string& input) throw(ProcessError) {
         throw ProcessError("Could not find stream information");
     }
 
-    if(open_codec_context(&video_stream_idx, &videodecodeCtx, formatContext, AVMEDIA_TYPE_VIDEO) >= 0) {
+    if(open_codec_context(&video_stream_idx, &videodecodeCtx, formatContext, AVMEDIA_TYPE_VIDEO, &refcount) >= 0) {
         /*Receiving the ID of the best stream video of the input coming from method  ---- video_stream_idx its changed */
         video_stream = formatContext->streams[video_stream_idx];
 
         //Creating video file to write to it
-        video_dst_file = std::fopen(videoFileName, "wb");
+        video_dst_file = std::fopen(input.c_str(), "wb");
         if (!video_dst_file) {
             ret = 1;
-            throw ProcessError("Could not open destination file " + video_dst_filename);
+            throw ProcessError("Could not open destination file " + input);
         }
 
         /* allocate image where the decoded image will be put */
@@ -48,6 +47,31 @@ void Process::openFile(const std::string& input) throw(ProcessError) {
         video_dst_bufsize = ret;
     }
 
-    //Paste stream information on the screen
+    // Paste stream information on the screen
     av_dump_format(formatContext, 0, input.c_str(), 0);
+
+    // if (!video_stream) {
+    //     ret = 1;
+    //     throw ProcessError("Could not find video stream in the input, aborting");
+    // }
+    //
+    // /*Allocate an AVFrame and set its fields to default values. The resulting struct must be freed using av_frame_free().*/
+    // frame = av_frame_alloc();
+    //
+    // if (!frame) {
+    //     ret = AVERROR(ENOMEM);
+    //     throw ProcessError("Could not allocate frame");
+    // }
+    //
+    // /* initialize packet, set data to NULL, let the demuxer fill it */
+    // av_init_packet(&pkt);
+    // pkt.data = NULL;
+    // pkt.size = 0;
+    // do {
+    //     decode_packet(&got_frame, 1);
+    // } while (got_frame);
+
+
+
+
 }
