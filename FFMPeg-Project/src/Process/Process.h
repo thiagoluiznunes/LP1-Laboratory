@@ -23,6 +23,7 @@ private:
     AVStream* video_stream;
     AVStream* audio_stream;
     AVFrame *frame;
+    AVFrame *frameBuffer;
     AVPacket pkt;
 
     int video_stream_idx = -1;

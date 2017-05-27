@@ -38,8 +38,17 @@ void Process::openFile(const std::string& input) throw(ProcessError) {
         width = videodecodeCtx->width;
         height = videodecodeCtx->height;
         pix_fmt = videodecodeCtx->pix_fmt;
-        ret = av_image_alloc(video_dst_data, video_dst_linesize,
-                             width, height, pix_fmt, 1);
+
+        frameBuffer->width = width;
+        frameBuffer->height = height;
+        frameBuffer->format = pix_fmt;
+
+        ret = av_frame_get_pkt_size(frameBuffer);
+
+        av_frame_free(&frameBuffer);
+        std::cout << "SIZE BUFFER " + std::to_string(ret) << '\n';
+        // ret = av_image_alloc(video_dst_data, video_dst_linesize,
+        //                      width, height, pix_fmt, 1);
         if (ret < 0) {
             throw ProcessError("Could not allocate raw video buffer");
         }
