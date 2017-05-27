@@ -13,6 +13,7 @@ extern "C" {
     #include <libavcodec/avcodec.h>
     #include <libavutil/audio_fifo.h>
     #include <libavutil/avutil.h>
+    #include <libavutil/imgutils.h>
 }
 
 class Process {
@@ -27,6 +28,7 @@ private:
     AVPacket pkt;
 
     int video_stream_idx = -1;
+    int audio_stream_idx = -1;
     int frameFinished = 1;
     int ret = 0, got_frame;
     int refcount = 0;
@@ -37,15 +39,14 @@ private:
     enum AVPixelFormat pix_fmt;
     int video_dst_bufsize;
 
-    // std::string videoFileName = nullptr;
-    // std::string audioFileName = nullptr;
     FILE *video_dst_file = NULL;
+    FILE *audio_dst_file = NULL;
 
 public:
     Process();
     ~Process();
 
-    void openFile(const std::string& input) throw(ProcessError);
+    void openFile(const std::string& type, const std::string& input) throw(ProcessError);
 
     Process(const Process&)            = delete; // We don't need the copy constructor as this is a singleton.
     Process& operator=(const Process&) = delete; // Copy assignment is not needed also.
