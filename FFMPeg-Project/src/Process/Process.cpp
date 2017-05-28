@@ -54,7 +54,7 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         }
         /*Size in bytes required for the image buffer*/
         video_dst_bufsize = ret;
-        }
+
         /*Chech video stream*/
         if (!video_stream) {
           ret = 1;
@@ -73,9 +73,11 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         pkt.data = NULL;
         pkt.size = 0;
         if (video_stream){
-          std::cout << "Demuxing video from file into " + input + " into " + videoOutput << '\n';
+          std::cout << "Demuxing video from file: " + input + '\n' +"Into: " + videoOutput << '\n';
           std::cout << "" << '\n';
         }
+      }
+      avcodec_free_context(&videodecodeCtx);
     }
 
     /*OPEN CODEC CONTEXT AUDIO*/
@@ -91,29 +93,39 @@ void Process::openFile(const std::string& type , const std::string& input) throw
             ret = 1;
             throw ProcessError("Could not open destination file " + input);
         }
-      }
-      /*Check audio stream*/
-      if (!audio_stream) {
-        ret = 1;
-        throw ProcessError("Could not find audio stream in the input, aborting");
-      }
+        /*Check audio stream*/
+        if (!audio_stream) {
+          ret = 1;
+          throw ProcessError("Could not find audio stream in the input, aborting");
+        }
 
-      if (audio_stream){
-        std::cout << "Demuxing audio from file into " + input + " into " + audioOutput << '\n';
-        std::cout << "" << '\n';
+        /* initialize packet, set data to NULL, let the demuxer fill it */
+        av_init_packet(&pkt);
+        pkt.data = NULL;
+        pkt.size = 0;
+
+        if (audio_stream){
+          std::cout << "Demuxing audio from file: " + input + '\n' + "Into: " + audioOutput << '\n';
+          std::cout << "" << '\n';
+        }
+
+        /*Allocate an AVFrame and set its fields to default values. The resulting struct must be freed using av_frame_free().*/
+        frame = av_frame_alloc();
+        if (!frame) {
+          ret = AVERROR(ENOMEM);
+          throw ProcessError("Could not allocate frame");
+        }
       }
+      avcodec_free_context(&audiodecodeCtx); //ABORTED (CORE DUMPED)
     }
 
     // Paste stream information on the screen
     //av_dump_format(formatContext, 0, input.c_str(), 0);
 
-    avcodec_free_context(&videodecodeCtx);
-    avcodec_free_context(&audiodecodeCtx);
     avformat_close_input(&formatContext);
-    if (video_dst_file)
-        fclose(video_dst_file);
-    if (audio_dst_file)
-        fclose(audio_dst_file);
-    av_frame_free(&frame);
+    if (video_dst_file){fclose(video_dst_file);}
+    if (audio_dst_file){fclose(audio_dst_file);}
+
+    // av_frame_free(&frame);     //SEGMENT FAULT
     av_free(video_dst_data[0]);
 }
