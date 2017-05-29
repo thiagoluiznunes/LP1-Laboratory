@@ -9,9 +9,13 @@ extern "C" {
     #include <libavcodec/avcodec.h>
     #include <libavutil/audio_fifo.h>
     #include <libavutil/avutil.h>
+    #include <libavutil/imgutils.h>
+    #include "libavutil/pixdesc.h"
 }
 
-static int open_codec_context(int *stream_idx, AVCodecContext **videodecodeCtx, AVFormatContext *formatContext, enum AVMediaType type, int *refcount) {
+
+static int open_codec_context(int *stream_idx, AVCodecContext **videodecodeCtx, AVFormatContext *formatContext,
+                              enum AVMediaType type, int *refcount) {
 
     int ret, stream_index;
     AVStream *st;

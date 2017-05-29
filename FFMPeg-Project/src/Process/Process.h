@@ -16,22 +16,30 @@ extern "C" {
     #include <libavutil/imgutils.h>
 }
 
+#define AV_OUTPUT_FORMAT "mpegts"
+#define AUDIO_OUTPUT_CODEC "ac3"
+
 class Process {
 private:
     AVFormatContext* formatContext;
+    AVFormatContext* outputFormatContext;
     AVCodecContext* videodecodeCtx;
     AVCodecContext* audiodecodeCtx;
+    AVStream* outStream;
     AVStream* video_stream;
     AVStream* audio_stream;
     AVFrame *frame;
     AVFrame *frameBuffer;
     AVPacket pkt;
+    AVPacket pktOutput;
 
     int video_stream_idx = -1;
     int audio_stream_idx = -1;
     int frameFinished = 1;
     int ret = 0, got_frame;
     int refcount = 0;
+    int video_frame_count = 0;
+    int audio_frame_count = 0;
 
     uint8_t *video_dst_data[4] = {NULL};
     int      video_dst_linesize[4];
