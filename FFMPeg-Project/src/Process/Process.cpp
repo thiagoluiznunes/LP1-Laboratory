@@ -24,7 +24,9 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         throw ProcessError("Could not find stream information");
     }
 
+
     av_dump_format(formatContext, 0, input.c_str(), 0);
+    std::cout << "" << '\n';
 
     /*OPEN CODEC CONTEXT VIDEO*/
     if(type.compare("video") == 0){
@@ -32,6 +34,8 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         std::cout << "*****************VIDEO*****************" << '\n';
 
         std::string videoOutput = "myVideoFile";
+
+
         if(open_codec_context(&video_stream_idx, &videodecodeCtx, formatContext, AVMEDIA_TYPE_VIDEO, &refcount) >= 0) {
             /*Receiving the ID of the best stream video of the input coming from method  ---- video_stream_idx its changed */
             video_stream = formatContext->streams[video_stream_idx];
@@ -46,31 +50,39 @@ void Process::openFile(const std::string& type , const std::string& input) throw
               std::cout << "Demuxing video from file: " + input + '\n' +"Into: " + videoOutput << '\n';
               std::cout << "" << '\n';
             }
+
             //Initialize Output
-            if (avformat_alloc_output_context2(&formatContext, NULL, AV_OUTPUT_FORMAT, videoOutput.c_str()) < 0) {
+            if (avformat_alloc_output_context2(&outputFormatContext, NULL, AV_OUTPUT_FORMAT, videoOutput.c_str()) < 0) {
               throw ProcessError("Could not create output context");
-        		}
-            outStream = avformat_new_stream(formatContext, nullptr);
+            }
+            outStream = avformat_new_stream(outputFormatContext, nullptr);
             if(outStream == nullptr){
               throw ProcessError("Could not create output stream");
             }
+
+            videoOutputStreamIndex = outStream->index;
+            outputCodecCtx = outStream->codec;
+
+            outputCodecCtx->codec_type 	= AVMEDIA_TYPE_VIDEO;
+            outputCodecCtx->height 		= formatContext->streams[video_stream_idx]->codec->height;
+            outputCodecCtx->width 		= formatContext->streams[video_stream_idx]->codec->width;
+            outputCodecCtx->pix_fmt		= formatContext->streams[video_stream_idx]->codec->pix_fmt;
             //Open output context
-        		if (avio_open (&formatContext->pb, videoOutput.c_str(), AVIO_FLAG_WRITE)) {
+            if (avio_open (&outputFormatContext->pb, videoOutput.c_str(), AVIO_FLAG_WRITE)) {
               throw ProcessError("AVIO_OPEN failed: " + videoOutput);
-        		}
+            }
             /* Read frames from the file */
             while (av_read_frame(formatContext, &pkt) >= 0) {
-               if (pkt.stream_index == video_stream_idx) {
+              if (pkt.stream_index == video_stream_idx) {
 
-                 av_packet_ref(&pktOutput, &pkt);
-                 pktOutput.stream_index = video_stream_idx;
+                av_packet_ref(&pktOutput, &pkt);
+                pktOutput.stream_index = videoOutputStreamIndex;
 
-                 if(av_write_frame (formatContext, &pktOutput) < 0) {
-                   std::cout << "Unable to write to output stream.." << '\n';
-                 }
-               }
+                if(av_write_frame (formatContext, &pktOutput) < 0) {
+                  std::cout << "Unable to write to output stream.." << '\n';
+                }
+              }
             }
-
             avcodec_free_context(&videodecodeCtx);
         }
     }
@@ -81,29 +93,25 @@ void Process::openFile(const std::string& type , const std::string& input) throw
       std::cout << "*****************AUDIO*****************" << '\n';
 
       std::string audioOutput = "myAudioFile";
-      if (open_codec_context(&audio_stream_idx, &audiodecodeCtx, formatContext, AVMEDIA_TYPE_AUDIO, &refcount) >= 0) {
-        audio_stream = formatContext->streams[audio_stream_idx];
-        /*Check audio stream*/
-        if (!audio_stream) {
-          ret = 1;
-          throw ProcessError("Could not find audio stream in the input, aborting");
-        }
 
-        if (audio_stream){
-          std::cout << "Demuxing audio from file: " + input + '\n' + "Into: " + audioOutput << '\n';
-          std::cout << "" << '\n';
-        }
-      }
-      avcodec_free_context(&audiodecodeCtx); //ABORTED (CORE DUMPED)
+      // if (open_codec_context(&audio_stream_idx, &audiodecodeCtx, formatContext, AVMEDIA_TYPE_AUDIO, &refcount) >= 0) {
+      //   audio_stream = formatContext->streams[audio_stream_idx];
+      //   /*Check audio stream*/
+      //   if (!audio_stream) {
+      //     ret = 1;
+      //     throw ProcessError("Could not find audio stream in the input, aborting");
+      //   }
+      //
+      //   if (audio_stream){
+      //     std::cout << "Demuxing audio from file: " + input + '\n' + "Into: " + audioOutput << '\n';
+      //     std::cout << "" << '\n';
+      //   }
+      // }
+      // avcodec_free_context(&audiodecodeCtx); //ABORTED (CORE DUMPED)
     }
 
     // Paste stream information on the screen
-    //av_dump_format(formatContext, 0, input.c_str(), 0);
 
     avformat_close_input(&formatContext);
-    if (video_dst_file){fclose(video_dst_file);}
-    if (audio_dst_file){fclose(audio_dst_file);}
 
-    // av_frame_free(&frame);     //SEGMENT FAULT
-    av_free(video_dst_data[0]);
 }

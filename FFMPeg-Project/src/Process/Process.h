@@ -21,17 +21,21 @@ extern "C" {
 
 class Process {
 private:
-    AVFormatContext* formatContext;
     AVFormatContext* outputFormatContext;
+    AVStream* outStream;
+    AVPacket pktOutput;
+    AVCodecContext  *outputCodecCtx;
+    int videoOutputStreamIndex = 0;
+    int outputStreamIndex = 0;
+
+    AVFormatContext* formatContext;
     AVCodecContext* videodecodeCtx;
     AVCodecContext* audiodecodeCtx;
-    AVStream* outStream;
     AVStream* video_stream;
     AVStream* audio_stream;
     AVFrame *frame;
     AVFrame *frameBuffer;
     AVPacket pkt;
-    AVPacket pktOutput;
 
     int video_stream_idx = -1;
     int audio_stream_idx = -1;
