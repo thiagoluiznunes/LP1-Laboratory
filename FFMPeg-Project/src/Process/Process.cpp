@@ -39,15 +39,16 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         if (avcodec_open2 (inputCodecCtx, inputEncoder, nullptr) < 0) {
           throw ProcessError("Could not open input codec");
         }
-        /**/
+        //Allocate an AVFormatContext for an output format.
         if (avformat_alloc_output_context2(&outputFormatContext, nullptr, AV_OUTPUT_FORMAT, videoOutput.c_str()) < 0) {
           throw ProcessError("Could not create output context");
         }
+        //Add a new stream to a media file.
         outStream = avformat_new_stream (outputFormatContext, nullptr);
     		if (outStream == nullptr) {
           throw ProcessError("Could not create output stream");
     		}
-
+        //Fill the parameters struct based on the values from the supplied codec context
         if (avcodec_parameters_from_context(outputParameters, inputCodecCtx) < 0) {
           throw ProcessError("Could not allocated fields in par");
         }
