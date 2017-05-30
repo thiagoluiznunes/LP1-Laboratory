@@ -47,5 +47,14 @@ void Process::openFile(const std::string& type , const std::string& input) throw
     		if (outStream == nullptr) {
           throw ProcessError("Could not create output stream");
     		}
+
+        if (avcodec_parameters_from_context(outputParameters, inputCodecCtx) < 0) {
+          throw ProcessError("Could not allocated fields in par");
+        }
+
+
+
+
+
     }
 }

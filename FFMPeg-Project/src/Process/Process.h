@@ -27,8 +27,9 @@ private:
   AVStream *inStream;
   int streamIndex = -1;
 
-  AVFormatContext *outputFormatContext;
+  AVFormatContext *outputFormatContext = nullptr;
   AVCodecContext *outputCodecCtx;
+  AVCodecParameters *outputParameters;
   AVCodec *outputEncoder;
   AVStream *outStream;
 
