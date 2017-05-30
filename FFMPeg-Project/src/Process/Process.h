@@ -16,43 +16,21 @@ extern "C" {
     #include <libavutil/imgutils.h>
 }
 
-#define AV_OUTPUT_FORMAT "mpegts"
+#define AV_OUTPUT_FORMAT "mp4"
 #define AUDIO_OUTPUT_CODEC "ac3"
 
 class Process {
 private:
-    AVFormatContext* outputFormatContext;
-    AVStream* outStream;
-    AVPacket pktOutput;
-    AVCodecContext  *outputCodecCtx;
-    int videoOutputStreamIndex = 0;
-    int outputStreamIndex = 0;
+  AVFormatContext *inputformatContext = nullptr;
+  AVCodecContext *inputCodecCtx;
+  AVCodec *inputEncoder;
+  AVStream *inStream;
+  int streamIndex = -1;
 
-    AVFormatContext* formatContext;
-    AVCodecContext* videodecodeCtx;
-    AVCodecContext* audiodecodeCtx;
-    AVStream* video_stream;
-    AVStream* audio_stream;
-    AVFrame *frame;
-    AVFrame *frameBuffer;
-    AVPacket pkt;
-
-    int video_stream_idx = -1;
-    int audio_stream_idx = -1;
-    int frameFinished = 1;
-    int ret = 0, got_frame;
-    int refcount = 0;
-    int video_frame_count = 0;
-    int audio_frame_count = 0;
-
-    uint8_t *video_dst_data[4] = {NULL};
-    int      video_dst_linesize[4];
-    int width, height;
-    enum AVPixelFormat pix_fmt;
-    int video_dst_bufsize;
-
-    FILE *video_dst_file = NULL;
-    FILE *audio_dst_file = NULL;
+  AVFormatContext *outputFormatContext;
+  AVCodecContext *outputCodecCtx;
+  AVCodec *outputEncoder;
+  AVStream *outStream;
 
 public:
     Process();
