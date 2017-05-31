@@ -33,7 +33,9 @@ void Process::openFile(const std::string& type , const std::string& input) throw
     /*OPEN CODEC CONTEXT VIDEO*/
     if(type.compare("video") == 0){
 
-        std::cout << "*****************VIDEO*****************" << '\n';
+        std::cout << "___________________________VIDEO__________________________" << '\n';
+        std::cout << "" << '\n';
+        std::cout << "" << '\n';
 
         std::string videoOutput = "myVideoFile";
         if (avcodec_open2 (inputCodecCtx, inputEncoder, nullptr) < 0) {
@@ -58,21 +60,30 @@ void Process::openFile(const std::string& type , const std::string& input) throw
           throw ProcessError("Could not allocated fields in par");
         }
 
-        std::cout << "INPUT ENCODER: " << '\n';
+        std::cout << "__________________________ENCODER__________________________" << '\n';
+        std::cout << "INPUT" << '\n';
         std::cout << std::to_string(inputEncoder->id) << '\n';
         std::cout << "name - " << inputEncoder->name << '\n';
         std::cout << "long name - " << inputEncoder->long_name << '\n';
         std::cout << "type - " + std::to_string(inputEncoder->type) << '\n';
         std::cout << "" << '\n';
 
-        std::cout << "OUTPUT ENCODER: " << '\n';
+        std::cout << "OUTPUT" << '\n';
         std::cout << std::to_string(outputEncoder->id) << '\n';
         std::cout << "name - " << outputEncoder->name << '\n';
         std::cout << "long name - " << outputEncoder->long_name << '\n';
         std::cout << "type - " + std::to_string(outputEncoder->type) << '\n';
         std::cout << "" << '\n';
 
+        std::cout << "_______________________AVFORMATCONTEXT_______________________" << '\n';
+        std::cout << "INPUT" << '\n';
+        std::cout << "video codec id: " + std::to_string(inputformatContext->video_codec_id) << '\n';
+        std::cout << "audio codec id: " + std::to_string(inputformatContext->audio_codec_id) << '\n';
+        std::cout << "" << '\n';
 
+        std::cout << "OUTPUT" << '\n';
+        std::cout << "video codec id: " + std::to_string(outputFormatContext->video_codec_id) << '\n';
+        std::cout << "audio codec id: " + std::to_string(outputFormatContext->audio_codec_id) << '\n';
 
 
 
