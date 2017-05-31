@@ -63,6 +63,14 @@ void Process::openFile(const std::string& type , const std::string& input) throw
     		if (avio_open (&outputFormatContext->pb, videoOutput.c_str(), AVIO_FLAG_WRITE)) {
           throw ProcessError("AVIO_OPEN failed");
     		}
+        //Allocate the stream private data and initialize the code
+        // if(avformat_init_output(outputFormatContext, nullptr) < 0){
+        //   throw ProcessError("Init output failed");
+        // }
+        //Write format context header
+    		// if (avformat_write_header (outputFormatContext, nullptr) < 0) {
+        //   throw ProcessError("Fail to write outstream header");
+    		// }
 
 
         std::cout << "__________________________ENCODER__________________________" << '\n';
