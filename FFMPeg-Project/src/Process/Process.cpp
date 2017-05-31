@@ -75,17 +75,17 @@ void Process::openFile(const std::string& type , const std::string& input) throw
 
         std::cout << "__________________________ENCODER__________________________" << '\n';
         std::cout << "INPUT" << '\n';
-        std::cout << std::to_string(inputEncoder->id) << '\n';
-        std::cout << "name - " << inputEncoder->name << '\n';
-        std::cout << "long name - " << inputEncoder->long_name << '\n';
-        std::cout << "type - " + std::to_string(inputEncoder->type) << '\n';
+        std::cout << "id: " + std::to_string(inputEncoder->id) << '\n';
+        std::cout << "name: " << inputEncoder->name << '\n';
+        std::cout << "long name: " << inputEncoder->long_name << '\n';
+        std::cout << "type: " + std::to_string(inputEncoder->type) << '\n';
         std::cout << "" << '\n';
 
         std::cout << "OUTPUT" << '\n';
-        std::cout << std::to_string(outputEncoder->id) << '\n';
-        std::cout << "name - " << outputEncoder->name << '\n';
-        std::cout << "long name - " << outputEncoder->long_name << '\n';
-        std::cout << "type - " + std::to_string(outputEncoder->type) << '\n';
+        std::cout << "id: " + std::to_string(outputEncoder->id) << '\n';
+        std::cout << "name:: " << outputEncoder->name << '\n';
+        std::cout << "long name: " << outputEncoder->long_name << '\n';
+        std::cout << "type: " + std::to_string(outputEncoder->type) << '\n';
         std::cout << "" << '\n';
 
         std::cout << "_______________________AVFORMATCONTEXT_______________________" << '\n';
