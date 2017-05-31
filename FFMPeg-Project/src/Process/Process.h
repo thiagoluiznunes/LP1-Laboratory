@@ -22,6 +22,7 @@ extern "C" {
 class Process {
 private:
   AVFormatContext *inputformatContext = nullptr;
+  AVOutputFormat *fmt;
   AVCodecContext *inputCodecCtx;
   AVCodec *inputEncoder;
   AVStream *inStream;

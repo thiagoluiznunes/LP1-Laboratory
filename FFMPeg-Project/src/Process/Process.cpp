@@ -43,15 +43,34 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         if (avformat_alloc_output_context2(&outputFormatContext, nullptr, AV_OUTPUT_FORMAT, videoOutput.c_str()) < 0) {
           throw ProcessError("Could not create output context");
         }
+        fmt = outputFormatContext->oformat;
+        //Finde the encoder
+        outputEncoder = avcodec_find_encoder(fmt->video_codec);
         //Add a new stream to a media file.
         outStream = avformat_new_stream (outputFormatContext, nullptr);
     		if (outStream == nullptr) {
           throw ProcessError("Could not create output stream");
     		}
+        outStream->id = outputFormatContext->nb_streams-1;
         //Fill the parameters struct based on the values from the supplied codec context
-        if (avcodec_parameters_from_context(outputParameters, inputCodecCtx) < 0) {
+        //Copy the stream parameters to the muxer
+        if (avcodec_parameters_from_context(outStream->codecpar, inputCodecCtx) < 0) {
           throw ProcessError("Could not allocated fields in par");
         }
+
+        std::cout << "INPUT ENCODER: " << '\n';
+        std::cout << std::to_string(inputEncoder->id) << '\n';
+        std::cout << "name - " << inputEncoder->name << '\n';
+        std::cout << "long name - " << inputEncoder->long_name << '\n';
+        std::cout << "type - " + std::to_string(inputEncoder->type) << '\n';
+        std::cout << "" << '\n';
+
+        std::cout << "OUTPUT ENCODER: " << '\n';
+        std::cout << std::to_string(outputEncoder->id) << '\n';
+        std::cout << "name - " << outputEncoder->name << '\n';
+        std::cout << "long name - " << outputEncoder->long_name << '\n';
+        std::cout << "type - " + std::to_string(outputEncoder->type) << '\n';
+        std::cout << "" << '\n';
 
 
 
