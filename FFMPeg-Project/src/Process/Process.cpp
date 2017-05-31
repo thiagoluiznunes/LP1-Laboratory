@@ -12,7 +12,7 @@ Process::~Process() {
 }
 
 void Process::openFile(const std::string& type , const std::string& input) throw(ProcessError) {
-    /* open input file, and allocate format context */
+    /* Open input file, and allocate format context */
 
     std::cout << "OPENING: " << input << std::endl;
     std::cout << "" << '\n';
@@ -20,7 +20,7 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         throw ProcessError("Could not open source file");
     }
 
-    // retrieve stream information
+    // Retrieve stream information
     if(avformat_find_stream_info(inputformatContext, nullptr) < 0){
         throw ProcessError("Could not find stream information");
     }
@@ -59,6 +59,11 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         if (avcodec_parameters_from_context(outStream->codecpar, inputCodecCtx) < 0) {
           throw ProcessError("Could not allocated fields in par");
         }
+        //Open output context
+    		if (avio_open (&outputFormatContext->pb, videoOutput.c_str(), AVIO_FLAG_WRITE)) {
+          throw ProcessError("AVIO_OPEN failed");
+    		}
+
 
         std::cout << "__________________________ENCODER__________________________" << '\n';
         std::cout << "INPUT" << '\n';
@@ -87,5 +92,7 @@ void Process::openFile(const std::string& type , const std::string& input) throw
 
 
 
+        std::cout << "" << '\n';
+        std::cout << "" << '\n';
     }
 }
