@@ -37,6 +37,12 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         std::cout << "" << '\n';
         std::cout << "" << '\n';
 
+        /*********************************************************************************************************************/
+      
+
+
+
+        /*********************************************************************************************************************/
         std::string videoOutput = "myVideoFile";
         if (avcodec_open2 (inputCodecCtx, inputEncoder, nullptr) < 0) {
           throw ProcessError("Could not open input codec");
