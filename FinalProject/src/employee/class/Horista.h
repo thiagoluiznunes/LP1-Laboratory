@@ -8,7 +8,7 @@
 const static float HORAS = 40.0f;
 const static float BONUS = 50.0f;
 
-class Horista : public Funcionario {
+class Horista : public Funcionario, public Account {
 
 private:
     double salarioPorHora;
@@ -16,14 +16,14 @@ private:
 
 public:
 
-    Horista(const string &nome, int mat, double salarioPorHora, double horasTrabalhadas);
+    Horista(const std::string &nome, int mat, double salarioPorHora, double horasTrabalhadas, int numC, double saldo);
 
     double calcularSalario() override;
 };
 
-Horista::Horista(const string &nome, int mat, double salarioH, double horasT, int numC, double saldo)
-                : Funcionario(nome, mat),
-                : Account(nome, numC, saldo), salarioPorHora(salarioH), horasTrabalhadas(horasT) {}
+Horista::Horista(const std::string &nome, int mat, double salarioH, double horasT, int numC, double saldo) :
+                 Funcionario(nome, mat),
+                 Account(nome, numC, saldo), salarioPorHora(salarioH), horasTrabalhadas(horasT) {}
 
 double Horista::calcularSalario() {
     double extra, horaExtra;
