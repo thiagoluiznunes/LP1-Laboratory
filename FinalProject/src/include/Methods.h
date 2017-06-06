@@ -2,6 +2,8 @@
 #define INCLUDE_METHODS_H
 
 #include "Funcionario.h"
+#include <string>
+#include <iostream>
 
 void printMenu(void) {
   std::cout << '\n' << "<<<<<<<<<<<<<<<<<<<< GERENCIA DE FUNCIONARIOS >>>>>>>>>>>>>>>>>>>" << '\n' << '\n';
