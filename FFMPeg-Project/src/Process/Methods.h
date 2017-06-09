@@ -1,5 +1,5 @@
-#ifndef PROCESS_OPEN_CODEC_H
-#define PROCESS_OPEN_CODEC_H
+#ifndef PROCESS_METHODS_H
+#define PROCESS_METHODS_H
 
 #include "ProcessError.h"
 

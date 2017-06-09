@@ -2,6 +2,7 @@
 #include <string>
 
 #include "MyProcess.h"
+#include "Process.h"
 
 /*
 Alterar canais com ffmpeg com videos de verdade
@@ -12,8 +13,8 @@ int main(const int argc, const char** argv) {
     std::cout << "READING FROM: " << argv[1] << std::endl;
     std::cout << "" << '\n';
 
-    MyProcess process; //Creates a new process
-    //MyProcess process = new MyProcess(argv[2]);
+    //Process process; //Creates a new process
+    MyProcess process;
     try {
         process.openFile("video", std::string(argv[1]));
         // process.openFile("audio", std::string(argv[1]));

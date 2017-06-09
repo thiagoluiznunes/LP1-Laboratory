@@ -41,6 +41,9 @@ void MyProcess::openFile(const std::string& type , const std::string& input) thr
           throw ProcessError("Could not allocate an AVFormatContext for an output format");
         }
         outFmt = outputFormatContext->oformat;
+        if (!outFmt) {
+        throw ProcessError("Couldn't create output format context");
+        }
         //Find Encoder
         outputEncoder = avcodec_find_encoder(outFmt->video_codec);
         if(!(&outputEncoder)){
@@ -67,31 +70,19 @@ void MyProcess::openFile(const std::string& type , const std::string& input) thr
         std::cout << "FROM inStream: " + std::to_string(inStream->codecpar->codec_id) << '\n';
         std::cout << "FROM outStream: " + std::to_string(outStream->codecpar->codec_id) << '\n';
 
+
+
+        std::cout << "CODEC TYPE: " + std::to_string(outStream->codecpar->codec_type) << '\n';
+        std::cout << "CODEC TAG: "  + std::to_string(outStream->codecpar->codec_tag) << '\n';
+        std::cout << "BIT RATE: "  + std::to_string(outStream->codecpar->bit_rate) << '\n';
+        std::cout << "WIDTH: "  + std::to_string(outStream->codecpar->width) << '\n';
+        std::cout << "WIDTH: "  + std::to_string(outStream->codecpar->height) << '\n';
+        std::cout << "FRAME SIZE: "  + std::to_string(outStream->codecpar->frame_size) << '\n';
+        std::cout << "" << '\n';
+
+        avformat_init_output(outputFormatContext, nullptr);
+        avformat_write_header(outputFormatContext, nullptr);
         av_dump_format(outputFormatContext, 0, "OI", 0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

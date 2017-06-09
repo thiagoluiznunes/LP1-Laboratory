@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "ProcessError.h"
-#include "OpenCodec.h"
+#include "Methods.h"
 
 extern "C" {
     #include <libavformat/avformat.h>
@@ -22,17 +22,21 @@ extern "C" {
 class Process {
 private:
   AVFormatContext *inputformatContext = nullptr;
-  AVOutputFormat *fmt;
   AVCodecContext *inputCodecCtx;
   AVCodec *inputEncoder;
   AVStream *inStream;
   int streamIndex = -1;
+  int ret;
+  int refcount;
 
   AVFormatContext *outputFormatContext = nullptr;
+  AVOutputFormat *outFmt;
   AVCodecContext *outputCodecCtx;
   AVCodecParameters *outputParameters;
   AVCodec *outputEncoder;
   AVStream *outStream;
+
+  FILE *video_dst_file = NULL;
 
 public:
     Process();

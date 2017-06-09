@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "ProcessError.h"
-#include "OpenCodec.h"
 
 extern "C" {
     #include <libavformat/avformat.h>

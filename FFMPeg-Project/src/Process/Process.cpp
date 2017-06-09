@@ -24,9 +24,6 @@ void Process::openFile(const std::string& type , const std::string& input) throw
     if(avformat_find_stream_info(inputformatContext, nullptr) < 0){
         throw ProcessError("Could not find stream information");
     }
-  	streamIndex =  av_find_best_stream(inputformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &inputEncoder, 0);
-  	inputCodecCtx = inputformatContext->streams[streamIndex]->codec;
-
     av_dump_format(inputformatContext, 0, input.c_str(), 0);
     std::cout << "" << '\n';
 
@@ -37,76 +34,56 @@ void Process::openFile(const std::string& type , const std::string& input) throw
         std::cout << "" << '\n';
         std::cout << "" << '\n';
 
+        std::string outFile = "videoFile";
         /*********************************************************************************************************************/
-      
-
-
-
-        /*********************************************************************************************************************/
-        std::string videoOutput = "myVideoFile";
-        if (avcodec_open2 (inputCodecCtx, inputEncoder, nullptr) < 0) {
-          throw ProcessError("Could not open input codec");
+        if (open_codec_context(&streamIndex, &inputCodecCtx, inputformatContext, AVMEDIA_TYPE_VIDEO, &refcount) >= 0) {
+            inStream = inputformatContext->streams[streamIndex];
+            video_dst_file = fopen(outFile.c_str(), "ws");
+            if (!video_dst_file) {
+              throw ProcessError("Could not open destination file");
+            }
         }
-        //Allocate an AVFormatContext for an output format.
-        if (avformat_alloc_output_context2(&outputFormatContext, nullptr, AV_OUTPUT_FORMAT, videoOutput.c_str()) < 0) {
-          throw ProcessError("Could not create output context");
+        std::cout << "OI" << '\n';
+        if(avformat_alloc_output_context2(&outputFormatContext, outFmt, nullptr, nullptr) < 0) {
+          throw ProcessError("Could not allocate an AVFormatContext for an output format");
         }
-        fmt = outputFormatContext->oformat;
-        //Finde the encoder
-        outputEncoder = avcodec_find_encoder(fmt->video_codec);
-        //Add a new stream to a media file.
-        outStream = avformat_new_stream (outputFormatContext, nullptr);
-    		if (outStream == nullptr) {
-          throw ProcessError("Could not create output stream");
-    		}
-        outStream->id = outputFormatContext->nb_streams-1;
-        //Fill the parameters struct based on the values from the supplied codec context
-        //Copy the stream parameters to the muxer
-        if (avcodec_parameters_from_context(outStream->codecpar, inputCodecCtx) < 0) {
-          throw ProcessError("Could not allocated fields in par");
+        outFmt = outputFormatContext->oformat;
+        if (!outFmt) {
+          throw ProcessError("Couldn't create output format context");
         }
-        //Open output context
-    		if (avio_open (&outputFormatContext->pb, videoOutput.c_str(), AVIO_FLAG_WRITE)) {
-          throw ProcessError("AVIO_OPEN failed");
-    		}
-        //Allocate the stream private data and initialize the code
-        // if(avformat_init_output(outputFormatContext, nullptr) < 0){
-        //   throw ProcessError("Init output failed");
-        // }
-        //Write format context header
-    		// if (avformat_write_header (outputFormatContext, nullptr) < 0) {
-        //   throw ProcessError("Fail to write outstream header");
-    		// }
+        //Find Encoder
+        outputEncoder = avcodec_find_encoder(outFmt->video_codec);
+        if(!(&outputEncoder)){
+          throw ProcessError("Could not find encoder");
+        }
+        //Add new stream to AVFormatContext
+        outStream = avformat_new_stream(outputFormatContext, nullptr);
+        if(!outStream){
+          throw ProcessError("Could not allocate stream");
+        }
+        //Allocate an AVCodecContext and set its fields to default values.
+        outputCodecCtx = avcodec_alloc_context3(outputEncoder);
+        if(!outputCodecCtx){
+          throw ProcessError("Could not alloc an encoding context");
+        }
 
-
-        std::cout << "__________________________ENCODER__________________________" << '\n';
-        std::cout << "INPUT" << '\n';
-        std::cout << "id: " + std::to_string(inputEncoder->id) << '\n';
-        std::cout << "name: " << inputEncoder->name << '\n';
-        std::cout << "long name: " << inputEncoder->long_name << '\n';
-        std::cout << "type: " + std::to_string(inputEncoder->type) << '\n';
-        std::cout << "" << '\n';
-
-        std::cout << "OUTPUT" << '\n';
-        std::cout << "id: " + std::to_string(outputEncoder->id) << '\n';
-        std::cout << "name:: " << outputEncoder->name << '\n';
-        std::cout << "long name: " << outputEncoder->long_name << '\n';
-        std::cout << "type: " + std::to_string(outputEncoder->type) << '\n';
-        std::cout << "" << '\n';
-
-        std::cout << "_______________________AVFORMATCONTEXT_______________________" << '\n';
-        std::cout << "INPUT" << '\n';
-        std::cout << "video codec id: " + std::to_string(inputformatContext->video_codec_id) << '\n';
-        std::cout << "audio codec id: " + std::to_string(inputformatContext->audio_codec_id) << '\n';
-        std::cout << "" << '\n';
-
-        std::cout << "OUTPUT" << '\n';
-        std::cout << "video codec id: " + std::to_string(outputFormatContext->video_codec_id) << '\n';
-        std::cout << "audio codec id: " + std::to_string(outputFormatContext->audio_codec_id) << '\n';
-
-
-
-        std::cout << "" << '\n';
-        std::cout << "" << '\n';
+        outputCodecCtx->codec_id = outFmt->video_codec;
+        //Copy the contents of src(inStream) to dst(outStream)
+        if(avcodec_parameters_copy(outStream->codecpar, inStream->codecpar) < 0){
+          throw ProcessError("Could not copy the contents parameters");
+        }
+        /* Copy codec parameters from input stream to output codec context */
+        if (avcodec_parameters_to_context(outputCodecCtx, inStream->codecpar) < 0) {
+          throw ProcessError("Failed to copy codec parameters to decoder context");
+        }
+        /*
+        std::cout << "CODEC TYPE: " + outStream->codecpar->codec_type << '\n';
+        std::cout << "CODEC ID :"  + outStream->codecpar->codec_id << '\n';
+        std::cout << "CODECT TAG: "  + outStream->codecpar->codec_tag << '\n';
+        std::cout << "BIT RATE: "  + outStream->codecpar->bit_rate << '\n';
+        std::cout << "WIDTH: "  + outStream->codecpar->width << '\n';
+        std::cout << "HEIGHT: "  + outStream->codecpar->height << '\n';
+        std::cout << "FRAME SIZE: "  + outStream->codecpar->frame_size << '\n';
+        */
     }
 }
